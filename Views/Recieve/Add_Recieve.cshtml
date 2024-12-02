@@ -1,0 +1,161 @@
+﻿@model inventory_managment.Models.VM.RecieveVM
+
+@{
+    ViewData["Title"] = "Add_Recieve"; 
+}
+
+<h1>Add_Recieve</h1>
+
+<h4>RecieveMaster</h4>
+<hr />
+<div class="row jusntify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Add_Recieve">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="RecieveMaster.Id" class="control-label"></label>
+                <input asp-for="RecieveMaster.Id" class="form-control" />
+                <span asp-validation-for="RecieveMaster.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecieveMaster.RefNum" class="control-label"></label>
+                <input asp-for="RecieveMaster.RefNum" class="form-control" />
+                <span asp-validation-for="RecieveMaster.RefNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecieveMaster.Recieve_date" class="control-label"></label>
+                <input asp-for="RecieveMaster.Recieve_date" class="form-control" />
+                <span asp-validation-for="RecieveMaster.Recieve_date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecieveMaster.Supplier_name" class="control-label"></label>
+                <input asp-for="RecieveMaster.Supplier_name" class="form-control" />
+                <span asp-validation-for="RecieveMaster.Supplier_name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecieveMaster.Supplier_mobile" class="control-label"></label>
+                <input asp-for="RecieveMaster.Supplier_mobile" class="form-control" />
+                <span asp-validation-for="RecieveMaster.Supplier_mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecieveMaster.Total_amount" class="control-label"></label>
+                <input asp-for="RecieveMaster.Total_amount" class="form-control" />
+                <span asp-validation-for="RecieveMaster.Total_amount" class="text-danger"></span>
+            </div>
+            <div>
+                <input class=" btn btn-primary" type="button" value="Add" onclick="AddrcvItem()" />
+                <select id="sel" hidden>
+                    <option>--select--</option>
+                    @foreach (var item in ViewBag.Items)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="row">
+                <table id="items_table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Purchase Rate</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.RecieveDetail.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    <select asp-for="RecieveDetail[i].Item_Id" class="form-control">
+                                        <option value="0">--select item--</option>
+                                        @foreach (var item in ViewBag.Items)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <input asp-for="RecieveDetail[i].Purches_rate" class="form-control" />
+                                </td>
+                                <td>
+                                    <input asp-for="RecieveDetail[i].Qty" class="form-control" />
+                                </td>
+                                <td>
+                                    <input asp-for="RecieveDetail[i].Amount" class="form-control" />
+                                </td>
+                                <td>
+                                    <input class="btn btn-danger bi bi-trash" value="delete" onclick="deleteRow(this)" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    function AddrcvItem(){
+
+        var table = document.getElementById('items_table');
+        
+        var rows = table.getElementsByTagName('tr');
+        var x = table.rows.length - 1;
+
+        var select = document.getElementById('sel');
+        var option = select.innerHTML;
+        var row_html = `<tr>
+                            <td>
+                                    <select class="form-control" data-val="true" data-val-required="The Item field is required." id="ReciveDetails_${x}__Item_Id" name="ReciveDetails[${x}].Item_Id">
+                                          ${option}
+                                    </select>
+                            </td>
+                            <td>
+                                <input class="form-control" type="number" data-val="true" data-val-required="The Purchase_Rate field is required." id="ReciveDetails_${x}__Purchase_Rate" name="ReciveDetails[${x}].Purchase_Rate" value="0" /><input name="__Invariant" type="hidden" value="ReciveDetails[${x}].Purchase_Rate" />
+                            </td>
+                            <td>
+                                <input class="form-control" type="number" data-val="true" data-val-required="The Qty field is required." id="ReciveDetails_${x}__Qty" name="ReciveDetails[${x}].Qty" value="0" /><input name="__Invariant" type="hidden" value="ReciveDetails[${x}].Qty" />
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="ReciveDetails_${x}__Amount" name="ReciveDetails[${x}].Amount" value="0" />
+                            </td>
+                            <td>
+                                <input class="btn btn-danger bi bi-trash" value="delete" onclick="deleteRow(this)" />
+                            </td>
+                        </tr>`;
+        
+        var new_row = table.insertRow();
+        new_row.innerHTML = row_html;
+    }
+    function deleteRow(r) {
+        var i = r.parentNode.parentNode.rowIndex;
+        document.getElementById("items_table").deleteRow(i);
+    }
+</script>
+
+@* <td><input class="form-control" type="number" data-val="true" data-val-required="The Item_Id field is required." id="RecieveDetail_${x}__Item_Id" name="RecieveDetail[${x}].Item_Id" value="0" /><input name="__Invariant" type="hidden" value="RecieveDetail[${x}].Item_Id" /></td> *@
+@* // <td>
+    //     <select class="form-control" data-val="true" data-val-required="The Item field is required." id="ReciveDetails_${x}__Item_Id" name="ReciveDetails[${x}].Item_Id">
+        //
+        <option value="0">--select item--</option>
+        //
+        <option value="1" selected="selected">Lenevo T480s</option>
+        //
+        <option value="2">Samsung S22</option>
+        //
+    </select>
+    //
+</td> *@

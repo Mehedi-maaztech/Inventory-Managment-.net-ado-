@@ -1,0 +1,70 @@
+﻿@model IEnumerable<inventory_managment.Models.RecieveMaster>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p class="py-3">
+    <a asp-action="Add_Recieve" class="btn btn=primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recieve_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier_mobile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total_amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Is_Cancelled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RefNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recieve_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier_mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total_amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Is_Cancelled)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Update_Recieve", new { Id = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Delete", "Delete", new { Id = item.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
